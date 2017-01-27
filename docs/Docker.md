@@ -191,7 +191,7 @@ Let's build [vovacher/seq2seq](https://hub.docker.com/r/vovacher/seq2seq/) image
 3. Now, update the repos and add few programs to the image
 
         RUN apt-get update --fix-missing && apt-get install -y 
-	    git \
+            git \
             wget \
             bzip2 \
             vim \
