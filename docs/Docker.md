@@ -190,7 +190,8 @@ Let's build [vovacher/seq2seq](https://hub.docker.com/r/vovacher/seq2seq/) image
         
 3. Now, update the repos and add few programs to the image
 
-        RUN apt-get update --fix-missing && apt-get install -y git \
+        RUN apt-get update --fix-missing && apt-get install -y 
+	    git \
             wget \
             bzip2 \
             vim \
@@ -217,8 +218,13 @@ Let's build [vovacher/seq2seq](https://hub.docker.com/r/vovacher/seq2seq/) image
         RUN python -c "import keras; import json; f = open('/root/.keras/keras.json', 'r'); setting = json.load(f); f.close(); setting['image_dim_ordering'] = 'th'; f = open('/root/.keras/keras.json', 'w'); json.dump(setting, f); f.close()"
     
     My favourite pair is Keras on top of the Tensorflow. Here I also changed some internal Keras settings (dimension order in batches) using simple inline python script.
+
+6. To enable Keras to visualize the architecture of the network right inside the Jupyter notebook let's install some extra libraries
+
+        RUN apt-get install -y graphviz && \
+            pip install pydot==1.1.0
     
-6. As we build an image for seq2seq project demo, we should include some additional libraries to make it work
+7. As we build an image for seq2seq project demo, we should include some additional libraries to make it work
 
         RUN pip install cairocffi && \
             apt-get install -y libcairo2 && \
@@ -226,15 +232,15 @@ Let's build [vovacher/seq2seq](https://hub.docker.com/r/vovacher/seq2seq/) image
     
     In particular, I used *libcairo* and it's python wrapper for generating images from text and *editdistance* package for calculation of distance between words.
     
-7. Let's finally download ready-to-use project from GitHub repository using `git` command which was installed at the third step
+8. Let's finally download ready-to-use project from GitHub repository using `git` command which was installed at the third step
 
         RUN git clone https://github.com/vladimir-chernykh/seq2seq.git /root/seq2seq
 
-8. If you want to use shared folder later on (and you definitely will want), you need to create a special folder for this purpose
+9. If you want to use shared folder later on (and you definitely will want), you need to create a special folder for this purpose
 
         RUN mkdir /root/shared
         
-9. Once the image has the software it needs, you instruct the software to run when the image is loaded
+10. Once the image has the software it needs, you instruct the software to run when the image is loaded
 
         CMD bash -c "jupyter notebook --port=8888 --ip=* --notebook-dir='/root'"
         
